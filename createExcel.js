@@ -11,23 +11,32 @@ async function createExcelFile() {
         { header: 'D.O.B.', key: 'dob', width: 15, style: { numFmt: 'mm/dd/yyyy' } }
     ];
 
-    // Add a row by sparse array (assign to columns A, B & C)
+    // Add a row
     worksheet.addRow({id: 1, name: 'John Doe', dob: new Date(1970, 1, 1)});
 
     // Style the first row
     const firstRow = worksheet.getRow(1);
     firstRow.font = { bold: true };
-    firstRow.getCell(1).fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FFFF00' },
-    };
+
+    // Apply styles to all cells in the first row
+    firstRow.eachCell(cell => {
+        cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFFF00' }
+        };
+
+        cell.border = {
+            top: { style: 'thin', color: { argb: 'FF0000' } },
+            left: { style: 'thin', color: { argb: 'FF0000' } },
+            bottom: { style: 'thin', color: { argb: 'FF0000' } },
+            right: { style: 'thin', color: { argb: 'FF0000' } }
+        };
+    });
 
     // Write to a file
-    await workbook.xlsx.writeFile('ExcelFile.xlsx');
-    console.log('Excel file created successfully!');
+    await workbook.xlsx.writeFile('ExcelFileWithStyles.xlsx');
+    console.log('Excel file with styles created successfully!');
 }
-
-console.log('test');
 
 createExcelFile().catch(err => console.error(err));
